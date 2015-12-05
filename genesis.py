@@ -21,7 +21,7 @@ def main():
   algorithm = get_algorithm(options)
 
   # https://en.bitcoin.it/wiki/Difficulty
-  bits, target   = get_difficulty(algorithm)
+  bits, target = get_difficulty(algorithm)
   
   # script - https://en.bitcoin.it/wiki/Script
   # more detail - https://github.com/CoinStudy/bitcoinbook/blob/develop/ch05.asciidoc
@@ -39,7 +39,7 @@ def main():
 
   # Block - https://en.bitcoin.it/wiki/Block
   # 블록 헤더 생성 - 
-  block_header        = create_block_header(hash_merkle_root, options.time, bits, options.nonce)
+  block_header = create_block_header(hash_merkle_root, options.time, bits, options.nonce)
 
   # 타겟 해시 마이닝 - https://en.bitcoin.it/wiki/Mining
   genesis_hash, nonce = generate_hash(block_header, algorithm, options.nonce, target)
