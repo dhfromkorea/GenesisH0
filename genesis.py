@@ -9,7 +9,10 @@ from construct import *
 
 
 def main():
+  
+  # 쉘 커맨드 옵션 가져오기
   options = get_args()
+  
   # 컨센서스 알고리즘 선택 - [SHA256|scrypt|X11|X13|X15]
   algorithm = get_algorithm(options)
 
@@ -20,13 +23,21 @@ def main():
   input_script  = create_input_script(options.timestamp)
   output_script = create_output_script(options.pubkey)
   
-  # hash merkle root is the double sha256 hash of the transaction(s) 
+   
+  # 트랜잭션 생성, block
   tx = create_transaction(input_script, output_script,options)
+
+  # hash merkle root is the double sha256 hash of the transaction(s)
+  # 머클트리 자세한 설명 - http://www.ddengle.com/bitcoin/855578
   hash_merkle_root = hashlib.sha256(hashlib.sha256(tx).digest()).digest()
   print_block_info(options, hash_merkle_root, bits)
 
+  # 블록 헤더 생성
   block_header        = create_block_header(hash_merkle_root, options.time, bits, options.nonce)
+
+  # 타겟 해시 마이닝
   genesis_hash, nonce = generate_hash(block_header, algorithm, options.nonce, target)
+  
   announce_found_genesis(genesis_hash, nonce)
 
 
