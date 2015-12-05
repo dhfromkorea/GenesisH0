@@ -14,12 +14,17 @@ def main():
   options = get_args()
   
   # 컨센서스 알고리즘 선택 - [SHA256|scrypt|X11|X13|X15]
+  # ASIC 저항성 알고리즘 - http://cryptorials.io/glossary/asic/
+  # Scrypt - https://litecoin.info/Scrypt
+  # X11 family - http://www.getpimp.org/community/blog/144-what-are-all-these-x11,-x13,-x15-algorithms-made-of.html
+
   algorithm = get_algorithm(options)
 
   # https://en.bitcoin.it/wiki/Difficulty
   bits, target   = get_difficulty(algorithm)
   
-  # https://en.bitcoin.it/wiki/Script
+  # script - https://en.bitcoin.it/wiki/Script
+  # more detail - https://github.com/CoinStudy/bitcoinbook/blob/develop/ch05.asciidoc
   input_script  = create_input_script(options.timestamp)
   output_script = create_output_script(options.pubkey)
   
@@ -32,10 +37,11 @@ def main():
   hash_merkle_root = hashlib.sha256(hashlib.sha256(tx).digest()).digest()
   print_block_info(options, hash_merkle_root, bits)
 
-  # 블록 헤더 생성
+  # Block - https://en.bitcoin.it/wiki/Block
+  # 블록 헤더 생성 - 
   block_header        = create_block_header(hash_merkle_root, options.time, bits, options.nonce)
 
-  # 타겟 해시 마이닝
+  # 타겟 해시 마이닝 - https://en.bitcoin.it/wiki/Mining
   genesis_hash, nonce = generate_hash(block_header, algorithm, options.nonce, target)
   
   announce_found_genesis(genesis_hash, nonce)
@@ -58,6 +64,7 @@ def get_args():
 
   (options, args) = parser.parse_args()
   return options
+
 
 def get_algorithm(options):
   supported_algorithms = ["SHA256", "scrypt", "X11", "X13", "X15"]
