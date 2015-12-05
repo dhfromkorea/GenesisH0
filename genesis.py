@@ -1,19 +1,25 @@
+#-*- coding: utf-8 -*-
 import hashlib, binascii, struct, array, os, time, sys, optparse
 import scrypt
 
 from construct import *
 
+# 용어정의
+# https://github.com/CoinStudy/bitcoinbook/blob/develop/glossary.asciidoc
+
 
 def main():
   options = get_args()
-
+  # 컨센서스 알고리즘 선택 - [SHA256|scrypt|X11|X13|X15]
   algorithm = get_algorithm(options)
 
   # https://en.bitcoin.it/wiki/Difficulty
   bits, target   = get_difficulty(algorithm)
-
+  
+  # https://en.bitcoin.it/wiki/Script
   input_script  = create_input_script(options.timestamp)
   output_script = create_output_script(options.pubkey)
+  
   # hash merkle root is the double sha256 hash of the transaction(s) 
   tx = create_transaction(input_script, output_script,options)
   hash_merkle_root = hashlib.sha256(hashlib.sha256(tx).digest()).digest()
